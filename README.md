@@ -22,7 +22,7 @@ Compute the dipole response in time domain using the Strong-Field Approximation.
 | Parameter | Type         | Description                       |
 | :-------- | :------------| :---------------------------------|
 | `Ip`      | `double` | Ionization potential of the atomic target in atomic units |
-|`efield`   | `complex` | Complex driving electric field array. It must be the same legnth as `t`. It must be in atomic units |
+|`efield`   | `double` | Real driving electric field array. It must be the same legnth as `t`. It must be in atomic units |
 |`t`        | `double` | Temporal array in atomic units    |
 |`nt`       | `int`     | Number of threads to perform the integration. *Optional*|
 
