@@ -31,7 +31,6 @@ Compute the dipole response in time domain using the Strong-Field Approximation.
 | `dipole_array`      | `complex`| Complex dipole response array in the temporal domain |
 
 ## Usage/Examples
-Check examples directory.
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
