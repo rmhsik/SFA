@@ -1,0 +1,4 @@
+*.so
+*.swp
+build/
+__pycache__
