@@ -3,7 +3,8 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.13.5)
 find_package(OpenMP REQUIRED)
 
 set(sfa_SOURCES 
-    src/sfa.cpp)
+    src/sfa.cpp
+    src/utils.cpp)
 
 add_library(sfa SHARED ${sfa_SOURCES})
 target_include_directories(sfa PUBLIC ${CMAKE_CURRENT_BINARY_DIR} include)

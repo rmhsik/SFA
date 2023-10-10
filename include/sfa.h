@@ -5,9 +5,7 @@
 #define cdouble std::complex<double>
 #define I std::complex<double>(0.0,1.0)
 
-extern "C" void SFA(double Ip, double *efield, double *t, const int nt, const int nthreads, cdouble *dipole);
-extern "C" void calc_vecpot(double *efield, double *t, const int nt, double *afield);
-extern "C" double calc_momentum(double *afield, const int idx_ion, const int idx_rec, double *t, const int nt);
-extern "C" double calc_action(double *afield, double Ip, const int idx_ion, const int idx_rec, double *t, const int nt);
+extern "C" void SFA(double Ip, double Z, double n_prin, double *efield, double *t, const int nt, const int nthreads, double *dipole);
 
+extern "C" void SFA3D(double Ip, double Z, double n_prin, double *efield_x, double *efield_y, double *efield_z, double *t, const int nt, const int nthreads, double *dipole_x, double *dipole_y, double *dipole_z);
 #endif
