@@ -1,5 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.13.5)
 
+project(pySFA)
+
 find_package(OpenMP REQUIRED)
 
 set(sfa_SOURCES 
