@@ -1,11 +1,11 @@
-#include "sfa.h"
+#include "pysfa.h"
 #include "utils.h"
 #include <iostream>
 #include <cmath>
 #include <omp.h>
 
 extern "C"{
-    void SFA(double Ip, double Z, double n_prin, double *efield, double *t, const int nt, const int nthreads, double *dipole){
+    void pySFA(double Ip, double Z, double n_prin, double *efield, double *t, const int nt, const int nthreads, double *dipole){
         double dt = t[1] -t[0];
         double *afield;
         double maxE0 = 0.0;
@@ -41,7 +41,7 @@ extern "C"{
         delete [] afield;
     }
 
-    void SFA3D(double Ip, double Z, double n_prin, double *efield_x, double *efield_y, double *efield_z, double *t, const int nt, const int nthreads, double *dipole_x, double *dipole_y, double *dipole_z){
+    void pySFA3D(double Ip, double Z, double n_prin, double *efield_x, double *efield_y, double *efield_z, double *t, const int nt, const int nthreads, double *dipole_x, double *dipole_y, double *dipole_z){
         double dt = t[1] - t[0];
         double *afield_x;
         double *afield_y;

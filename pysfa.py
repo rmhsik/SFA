@@ -7,7 +7,7 @@ def pySFA(Ip, Z, n_prin, efield, t, nthreads=1):
     if efield.shape[0] != nt:
         raise Exception("efield array length must be equal to t array length")
         
-    sfa_c = ct.CDLL(os.getcwd() + "/pySFA/build/libsfa.so")
+    sfa_c = ct.CDLL(os.getcwd() + "/pySFA/build/libpysfa.so")
     ND_POINTER_1_double = np.ctypeslib.ndpointer(dtype=np.float64, ndim=1, flags="C") 
     ND_POINTER_1_complex = np.ctypeslib.ndpointer(dtype=np.complex128, ndim=1, flags="C")
 
