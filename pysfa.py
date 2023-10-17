@@ -25,16 +25,16 @@ def pySFA3D(Ip, Z, n_prin, efield, t, nthreads=1):
     if efield.shape[1] != nt:
         raise Exception("efield axis 1 length must be equal to t array length")
         
-    sfa_c = ct.CDLL(os.getcwd() + "/pySFA/build/libsfa.so")
+    sfa_c = ct.CDLL(os.getcwd() + "/pySFA/build/libpysfa.so")
     ND_POINTER_1_double = np.ctypeslib.ndpointer(dtype=np.float64, ndim=1, flags="C") 
     ND_POINTER_1_complex = np.ctypeslib.ndpointer(dtype=np.complex128, ndim=1, flags="C")
 
-    sfa_c.SFA3D.argtypes = [ct.c_double, ct.c_double, ct.c_double, ND_POINTER_1_double, ND_POINTER_1_double, ND_POINTER_1_double, ND_POINTER_1_double, ct.c_int32, ct.c_int32, ND_POINTER_1_double, ND_POINTER_1_double, ND_POINTER_1_double]
-    sfa_c.SFA3D.restype = ct.c_void_p
+    sfa_c.pySFA3D.argtypes = [ct.c_double, ct.c_double, ct.c_double, ND_POINTER_1_double, ND_POINTER_1_double, ND_POINTER_1_double, ND_POINTER_1_double, ct.c_int32, ct.c_int32, ND_POINTER_1_double, ND_POINTER_1_double, ND_POINTER_1_double]
+    sfa_c.pySFA3D.restype = ct.c_void_p
     dipole_x = np.zeros(efield[0].shape, dtype=np.float64)
     dipole_y = np.zeros(efield[1].shape, dtype=np.float64)
     dipole_z = np.zeros(efield[2].shape, dtype=np.float64)
-    sfa_c.SFA3D(Ip, Z, n_prin, efield[0].astype(np.float64), efield[1].astype(np.float64), efield[2].astype(np.float64),
+    sfa_c.pySFA3D(Ip, Z, n_prin, efield[0].astype(np.float64), efield[1].astype(np.float64), efield[2].astype(np.float64),
              t.astype(np.float64), nt, nthreads,
              dipole_x, dipole_y, dipole_z)
 

@@ -91,25 +91,31 @@ extern "C"{
                 tmp_value_z = 0.0;
                 calc_momentum3D(afield_x, afield_y, afield_z, j, i, t, momentum);
                 action = calc_action3D(afield_x, afield_y, afield_z, momentum, Ip, j, i, t);
-                calc_matrix_element3D(momentum, afield_x[i], 
-                                                afield_y[i], 
-                                                afield_z[i], Z, n_prin, maxE0, Ip, matrix_dipole_ion);
-                calc_matrix_element3D(momentum, afield_x[j],
-                                                afield_y[j],
-                                                afield_z[j], Z, n_prin, maxE0, Ip, matrix_dipole_rec);
+                calc_matrix_element3D(momentum, afield_x[j], 
+                                                afield_y[j], 
+                                                afield_z[j], Z, n_prin, maxE0, Ip, matrix_dipole_ion);
+                calc_matrix_element3D(momentum, afield_x[i],
+                                                afield_y[i],
+                                                afield_z[i], Z, n_prin, maxE0, Ip, matrix_dipole_rec);
                 prefactor = pow(2.0*M_PI/(0.00001 + I*(t[i]-t[j])),1.5);
                 tmp_value_x = prefactor;
                 tmp_value_y = prefactor;
                 tmp_value_z = prefactor;
-                tmp_value_x *= efield_x[j];
-                tmp_value_y *= efield_y[j];
-                tmp_value_z *= efield_z[j];
                 tmp_value_x *= exp(-I*action);
                 tmp_value_y *= exp(-I*action);
                 tmp_value_z *= exp(-I*action);
-                tmp_dipole_x += tmp_value_x*matrix_dipole_ion[0]*std::conj(matrix_dipole_rec[0]);
-                tmp_dipole_y += tmp_value_y*matrix_dipole_ion[1]*std::conj(matrix_dipole_rec[1]);
-                tmp_dipole_z += tmp_value_z*matrix_dipole_ion[2]*std::conj(matrix_dipole_rec[2]);
+                tmp_dipole_x += tmp_value_x*(matrix_dipole_ion[0]*efield_x[j] +
+                                             matrix_dipole_ion[1]*efield_y[j] +
+                                             matrix_dipole_ion[2]*efield_z[j]) *
+                                             std::conj(matrix_dipole_rec[0]);
+                tmp_dipole_y += tmp_value_y*(matrix_dipole_ion[0]*efield_x[j] +
+                                             matrix_dipole_ion[1]*efield_y[j] +
+                                             matrix_dipole_ion[2]*efield_z[j]) *
+                                             std::conj(matrix_dipole_rec[1]);
+                tmp_dipole_z += tmp_value_z*(matrix_dipole_ion[0]*efield_x[j] +
+                                             matrix_dipole_ion[1]*efield_y[j] +
+                                             matrix_dipole_ion[2]*efield_z[j]) *
+                                             std::conj(matrix_dipole_rec[2]);
             }
             delete[] momentum;
             delete[] matrix_dipole_ion;

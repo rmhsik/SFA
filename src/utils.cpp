@@ -47,7 +47,7 @@ void calc_vecpot(double *efield, double *t, const int nt, double *afield){
         double canonical_momentum_z = 0.0;
         double tau_ion = t[idx_ion];
         double tau_rec = t[idx_rec];
-        double prefactor = -1.0/(tau_rec-tau_ion+0.001);
+        double prefactor = -1.0/(tau_rec-tau_ion+0.000001);
         for(int i=idx_ion; i<idx_rec; i++){
             canonical_momentum_x += afield_x[i];
             canonical_momentum_y += afield_y[i];
