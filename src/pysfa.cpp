@@ -4,6 +4,11 @@
 #include <cmath>
 #include <omp.h>
 
+cdouble fastPow1_5(cdouble a){
+    cdouble sqrt_a = sqrt(a);
+    return sqrt_a*a;
+}
+
 extern "C"{
     void pySFA(double Ip, double Z, double n_prin, double *efield, double *t, const int nt, const int nthreads, double *dipole){
         double dt = t[1] -t[0];
@@ -21,20 +26,37 @@ extern "C"{
             cdouble dipole_i = 0.0;
             cdouble tmp_value = 0.0;
             double action   = 0.0;
-            double momentum = 0.0;
-            cdouble matrix_dipole_ion = 0.0;
-            cdouble matrix_dipole_rec = 0.0;
+            //double momentum = 0.0;
+            double *momentum_array;
+            double *action_array;
+            cdouble *matrix_dipole_ion;
+            cdouble *matrix_dipole_rec;
+            momentum_array = new double[i];
+            action_array = new double[i];
+            matrix_dipole_ion = new cdouble[i];
+            matrix_dipole_rec = new cdouble[i];
+            for(int j=0; j<i; j++){
+                momentum_array[j] = 0.0;
+                action_array[j] = 0.0;
+                matrix_dipole_ion[j] = cdouble(0.0,0.0);
+                matrix_dipole_rec[j] = cdouble(0.0,0.0);
+            }
+            calc_momentum_array(afield, momentum_array, i, t);
+            calc_action_array(afield, momentum_array, action_array, Ip, i, t);
+            calc_matrix_element_array(momentum_array, afield, matrix_dipole_ion,
+                                      matrix_dipole_rec, i, Z, n_prin, maxE0, Ip);
             for(int j=0; j<i; j++){
                 tmp_value = 0.0;
-                momentum = calc_momentum(afield, j, i, t);
-                action = calc_action(afield, momentum, Ip, j, i, t);
-                matrix_dipole_rec = calc_matrix_element(momentum+afield[i], Z, n_prin, maxE0, Ip);
-                matrix_dipole_ion = calc_matrix_element(momentum+afield[j], Z, n_prin, maxE0, Ip);
-                tmp_value  = pow(2.0*M_PI/( 0.00001 + I*(t[i]-t[j]) ), 1.5);
+                action = action_array[j];
+                tmp_value = fastPow1_5(2.0*M_PI/( 0.00001 + I*(t[i]-t[j])) );
                 tmp_value *= efield[j];
                 tmp_value *= exp(-I*action);
-                dipole_i += tmp_value*matrix_dipole_ion*std::conj(matrix_dipole_rec);
+                dipole_i += tmp_value*matrix_dipole_ion[j]*std::conj(matrix_dipole_rec[j]);
             }
+            delete [] momentum_array;
+            delete [] action_array;
+            delete [] matrix_dipole_ion;
+            delete [] matrix_dipole_rec;
             dipole_i *= I*dt;
             dipole[i] = dipole_i.real();
         }
@@ -83,21 +105,31 @@ extern "C"{
             cdouble prefactor = 0.0;
             double action = 0.0;
             double *momentum = new double[3];
+            double *momentum_array = new double[3*i];
+            double *action_array = new double[i];
             cdouble *matrix_dipole_ion = new cdouble[3];
             cdouble *matrix_dipole_rec = new cdouble[3];
+            for(int j = 0; j<i; j++){
+                action_array[j] = 0.0;
+                momentum_array[j*3 + 0] = 0.0;
+                momentum_array[j*3 + 1] = 0.0;
+                momentum_array[j*3 + 2] = 0.0;
+            }
+            calc_momentum3D_array(afield_x, afield_y, afield_z, i, t, momentum_array);
+            calc_action3D_array(afield_x, afield_y, afield_z, momentum_array, action_array, Ip, i, t);
             for(int j=0; j<i; j++){
                 tmp_value_x = 0.0;
                 tmp_value_y = 0.0;
                 tmp_value_z = 0.0;
-                calc_momentum3D(afield_x, afield_y, afield_z, j, i, t, momentum);
-                action = calc_action3D(afield_x, afield_y, afield_z, momentum, Ip, j, i, t);
+                std::copy(&momentum_array[j*3], &momentum_array[j*3+3], momentum);
+                action = action_array[j];
                 calc_matrix_element3D(momentum, afield_x[j], 
                                                 afield_y[j], 
                                                 afield_z[j], Z, n_prin, maxE0, Ip, matrix_dipole_ion);
                 calc_matrix_element3D(momentum, afield_x[i],
                                                 afield_y[i],
                                                 afield_z[i], Z, n_prin, maxE0, Ip, matrix_dipole_rec);
-                prefactor = pow(2.0*M_PI/(0.00001 + I*(t[i]-t[j])),1.5);
+                prefactor = fastPow1_5(2.0*M_PI/(0.00001 + I*(t[i]-t[j])));
                 tmp_value_x = prefactor;
                 tmp_value_y = prefactor;
                 tmp_value_z = prefactor;
@@ -118,6 +150,8 @@ extern "C"{
                                              std::conj(matrix_dipole_rec[2]);
             }
             delete[] momentum;
+            delete[] momentum_array;
+            delete[] action_array;
             delete[] matrix_dipole_ion;
             delete[] matrix_dipole_rec;
             tmp_dipole_x *= I*dt;

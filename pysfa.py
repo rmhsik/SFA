@@ -11,10 +11,10 @@ def pySFA(Ip, Z, n_prin, efield, t, nthreads=1):
     ND_POINTER_1_double = np.ctypeslib.ndpointer(dtype=np.float64, ndim=1, flags="C") 
     ND_POINTER_1_complex = np.ctypeslib.ndpointer(dtype=np.complex128, ndim=1, flags="C")
 
-    sfa_c.SFA.argtypes = [ct.c_double, ct.c_double, ct.c_double, ND_POINTER_1_double, ND_POINTER_1_double, ct.c_int32, ct.c_int32, ND_POINTER_1_double]
-    sfa_c.SFA.restype = ct.c_void_p
+    sfa_c.pySFA.argtypes = [ct.c_double, ct.c_double, ct.c_double, ND_POINTER_1_double, ND_POINTER_1_double, ct.c_int32, ct.c_int32, ND_POINTER_1_double]
+    sfa_c.pySFA.restype = ct.c_void_p
     dipole_array = np.zeros(efield.shape, dtype=np.float64)
-    sfa_c.SFA(Ip, Z, n_prin, efield.astype(np.float64), t.astype(np.float64), nt, nthreads, dipole_array)
+    sfa_c.pySFA(Ip, Z, n_prin, efield.astype(np.float64), t.astype(np.float64), nt, nthreads, dipole_array)
     del sfa_c
     return dipole_array
 

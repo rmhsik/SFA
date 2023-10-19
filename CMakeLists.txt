@@ -4,6 +4,7 @@ project(pysfa)
 
 find_package(OpenMP REQUIRED)
 
+set(CMAKE_CXX_FLAGS "-O3 -lm -Wall -Wextra -ffast-math -g -march=native")
 set(pysfa_SOURCES 
     src/pysfa.cpp
     src/utils.cpp)
@@ -19,5 +20,4 @@ endif()
 target_include_directories(pysfa PUBLIC ${CMAKE_CURRENT_BINARY_DIR} include)
 target_compile_features(pysfa PRIVATE cxx_std_17)
 target_link_libraries(pysfa PUBLIC OpenMP::OpenMP_CXX)
-set(CMAKE_CXX_FLAGS "-O3 -lm -Wall -Wextra -ffast-math")
 
