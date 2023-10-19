@@ -122,6 +122,7 @@ void HarmonicPySFA::calculateAcceleration(Field *field){
     writeDipole(dipole_x, dipole_y, dipole_z, nt, tmppath);
     std::copy(dipole_x, dipole_x+nt, mAccelX);
     std::copy(dipole_y, dipole_y+nt, mAccelY);
+    std::copy(dipole_z, dipole_z+nt, mAccelZ);
 
     delete [] dipole_x;
     delete [] dipole_y;
